@@ -10,12 +10,15 @@ function VideoTrack({ track, isLocal = false, identity }) {
     }
   }, [track]);
 
-  if (!track) return null;
-
   return (
     <div className="video-container">
-      <video ref={videoRef} autoPlay muted={isLocal} />
-      <p>{identity}{isLocal ? " (You)" : ""}</p>
+      {track ? (
+        <video ref={videoRef} autoPlay muted={isLocal} />
+      ) : (
+        <div className="video-placeholder">
+          {identity} {isLocal ? "(You)" : ""}
+        </div>
+      )}
     </div>
   );
 }

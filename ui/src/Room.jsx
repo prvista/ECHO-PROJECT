@@ -1,69 +1,86 @@
 import React, { useEffect, useState } from "react";
-import { Room as LiveKitRoom, connect } from "livekit-client";
-import VideoTrack from "./VideoTrack";
+import { connect } from "livekit-client";
+import VideoTrack from "./VideoTrack.jsx";
 
-function Room() {
+function Room({ roomName, identity }) {
   const [room, setRoom] = useState(null);
   const [participants, setParticipants] = useState([]);
+  const [connecting, setConnecting] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
+    let liveRoom = null;
+
     const joinRoom = async () => {
       try {
-        // Replace with your roomName and identity
-        const roomName = "echo-room";
-        const identity = "user-" + Math.floor(Math.random() * 1000);
-
-        // Get token from FastAPI server
         const res = await fetch(
           `http://127.0.0.1:8000/get-token?roomName=${roomName}&identity=${identity}`
         );
+        if (!res.ok) throw new Error("Failed to fetch token");
         const data = await res.json();
 
-        // Connect to LiveKit
-        const liveRoom = await connect("wss://echo-iptawdrf.livekit.cloud", data.token, {
+        liveRoom = await connect("wss://echo-iptawdrf.livekit.cloud", data.token, {
           audio: true,
           video: true,
         });
 
         setRoom(liveRoom);
 
-        // Update participants whenever a participant joins/leaves
-        const updateParticipants = () => {
-          setParticipants([...liveRoom.participants.values()]);
-        };
-
+        const updateParticipants = () => setParticipants([...liveRoom.participants.values()]);
         liveRoom.on("participantConnected", updateParticipants);
         liveRoom.on("participantDisconnected", updateParticipants);
-        updateParticipants(); // initial list
+        updateParticipants();
 
+        await liveRoom.localParticipant.setCameraEnabled(true);
+        await liveRoom.localParticipant.setMicrophoneEnabled(true);
+
+        setConnecting(false);
       } catch (err) {
-        console.error("Error joining room:", err);
+        console.error(err);
+        setError(err.message);
+        setConnecting(false);
       }
     };
 
     joinRoom();
 
     return () => {
-      if (room) room.disconnect();
+      if (liveRoom) liveRoom.disconnect();
     };
-  }, []);
+  }, [roomName, identity]);
+
+  if (error) return <div className="room-container">Error: {error}</div>;
+
+  const localTrack =
+    room &&
+    room.localParticipant &&
+    room.localParticipant.videoTracks &&
+    room.localParticipant.videoTracks.size > 0
+      ? Array.from(room.localParticipant.videoTracks.values())[0].track
+      : null;
 
   return (
     <div className="room-container">
-      {participants.length === 0 && <p>Waiting for participants...</p>}
+      <h2>Room: {roomName}</h2>
+
       <div className="video-grid">
-        {room && (
-          <VideoTrack
-            track={room.localParticipant.videoTracks.values().next().value?.track}
-            isLocal={true}
-            identity={room.localParticipant.identity}
-          />
-        )}
+        {/* Local participant */}
+        <VideoTrack
+          track={localTrack}
+          isLocal={true}
+          identity={room?.localParticipant?.identity || "You"}
+        />
+
+        {/* Remote participants */}
         {participants.map((p) =>
           Array.from(p.videoTracks.values()).map((vt) => (
             <VideoTrack key={vt.trackSid} track={vt.track} identity={p.identity} />
           ))
         )}
+
+        {/* Connecting / empty placeholder */}
+        {connecting && <p style={{ color: "#fff" }}>Connecting to LiveKit...</p>}
+        {!connecting && participants.length === 0 && <p style={{ color: "#fff" }}>No participants yet</p>}
       </div>
     </div>
   );
