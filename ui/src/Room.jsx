@@ -1,63 +1,72 @@
 import React, { useEffect, useState } from "react";
-import { connect, Room as LiveKitRoom } from "livekit-client";
+import { Room as LiveKitRoom, connect } from "livekit-client";
 import VideoTrack from "./VideoTrack";
 
-export default function Room({ token, roomName }) {
+function Room() {
   const [room, setRoom] = useState(null);
   const [participants, setParticipants] = useState([]);
 
   useEffect(() => {
-    let lkRoom = new LiveKitRoom();
-
     const joinRoom = async () => {
       try {
-        await connect(process.env.LIVEKIT_URL || "wss://echo-iptawdrf.livekit.cloud", token, {
-          room: lkRoom,
+        // Replace with your roomName and identity
+        const roomName = "echo-room";
+        const identity = "user-" + Math.floor(Math.random() * 1000);
+
+        // Get token from FastAPI server
+        const res = await fetch(
+          `http://127.0.0.1:8000/get-token?roomName=${roomName}&identity=${identity}`
+        );
+        const data = await res.json();
+
+        // Connect to LiveKit
+        const liveRoom = await connect("wss://echo-iptawdrf.livekit.cloud", data.token, {
+          audio: true,
+          video: true,
         });
 
-        setRoom(lkRoom);
+        setRoom(liveRoom);
 
+        // Update participants whenever a participant joins/leaves
         const updateParticipants = () => {
-          setParticipants(Array.from(lkRoom.participants.values()));
+          setParticipants([...liveRoom.participants.values()]);
         };
 
-        lkRoom
-          .on("participantConnected", updateParticipants)
-          .on("participantDisconnected", updateParticipants);
+        liveRoom.on("participantConnected", updateParticipants);
+        liveRoom.on("participantDisconnected", updateParticipants);
+        updateParticipants(); // initial list
 
-        updateParticipants();
       } catch (err) {
-        console.error("Error connecting:", err);
+        console.error("Error joining room:", err);
       }
     };
 
     joinRoom();
 
     return () => {
-      lkRoom.disconnect();
+      if (room) room.disconnect();
     };
-  }, [token]);
+  }, []);
 
   return (
-    <div className="container mt-5">
-      <h2>Room: {roomName}</h2>
-      <h3>Participants:</h3>
-      <ul>
-        {participants.map((p) => (
-          <li key={p.sid}>{p.identity}</li>
-        ))}
-      </ul>
+    <div className="room-container">
+      {participants.length === 0 && <p>Waiting for participants...</p>}
       <div className="video-grid">
+        {room && (
+          <VideoTrack
+            track={room.localParticipant.videoTracks.values().next().value?.track}
+            isLocal={true}
+            identity={room.localParticipant.identity}
+          />
+        )}
         {participants.map((p) =>
-          Array.from(p.tracks.values()).map(
-            (trackPub) =>
-              trackPub.isSubscribed &&
-              trackPub.track && (
-                <VideoTrack key={trackPub.trackSid} track={trackPub.track} />
-              )
-          )
+          Array.from(p.videoTracks.values()).map((vt) => (
+            <VideoTrack key={vt.trackSid} track={vt.track} identity={p.identity} />
+          ))
         )}
       </div>
     </div>
   );
 }
+
+export default Room;

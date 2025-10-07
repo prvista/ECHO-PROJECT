@@ -1,16 +1,23 @@
-import React, { useEffect, useRef } from "react";
+import React, { useRef, useEffect } from "react";
 
-export default function VideoTrack({ track }) {
-  const ref = useRef();
+function VideoTrack({ track, isLocal = false, identity }) {
+  const videoRef = useRef(null);
 
   useEffect(() => {
-    if (track.kind === "video") {
-      track.attach(ref.current);
-      return () => {
-        track.detach(ref.current);
-      };
+    if (track && videoRef.current) {
+      track.attach(videoRef.current);
+      return () => track.detach(videoRef.current);
     }
   }, [track]);
 
-  return <video ref={ref} autoPlay playsInline className="rounded border" />;
+  if (!track) return null;
+
+  return (
+    <div className="video-container">
+      <video ref={videoRef} autoPlay muted={isLocal} />
+      <p>{identity}{isLocal ? " (You)" : ""}</p>
+    </div>
+  );
 }
+
+export default VideoTrack;

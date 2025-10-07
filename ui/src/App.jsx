@@ -1,21 +1,15 @@
-import { useEffect, useState } from "react";
+import React from "react";
+import Room from "./Room"; // your room.jsx component
+import "./app.css";
 
 function App() {
-  const [token, setToken] = useState(null);
-
-  useEffect(() => {
-    async function fetchToken() {
-      const res = await fetch("http://localhost:8000/get-token?roomName=testroom&identity=paul");
-      const data = await res.json();
-      setToken(data.token);
-    }
-    fetchToken();
-  }, []);
+  // Replace "test-room" with any room name
+  const roomName = "test-room";
+  const identity = "user-" + Math.floor(Math.random() * 1000);
 
   return (
-    <div>
-      <h1>LiveKit Test</h1>
-      {token ? <p>Got token ✅</p> : <p>Loading token...</p>}
+    <div className="App">
+      <Room roomName={roomName} identity={identity} />
     </div>
   );
 }

@@ -1,11 +1,19 @@
+cd C:\Users\vista\Downloads\echo\client
+npm run dev
+
 cd C:\Users\vista\Downloads\echo
-.\venv\Scripts\Activate
+.\venv\Scripts\activate
 Remove-Item Env:http_proxy
 python .\agent.py dev
 
-python .\agent.py console
 
-
-
-cd C:\Users\vista\Downloads\echo\client
+frontend (React)
+cd C:\Users\vista\Downloads\echo\ui
+npm install    # if you haven’t installed dependencies yet
 npm run dev
+
+backend
+cd C:\Users\vista\Downloads\echo
+& .\venv\Scripts\Activate.ps1
+uvicorn server:app --reload --host 127.0.0.1 --port 8000
+
