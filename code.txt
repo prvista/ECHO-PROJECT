@@ -1,0 +1,11 @@
+cd C:\Users\vista\Downloads\echo
+.\venv\Scripts\Activate
+Remove-Item Env:http_proxy
+python .\agent.py dev
+
+python .\agent.py console
+
+
+
+cd C:\Users\vista\Downloads\echo\client
+npm run dev
