@@ -7,6 +7,7 @@
     "tailwindcss": "^4.1.14"
   },
   "dependencies": {
-    "bootstrap": "^5.3.8"
+    "bootstrap": "^5.3.8",
+    "livekit-client": "^2.15.8"
   }
 }

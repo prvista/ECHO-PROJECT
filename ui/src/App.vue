@@ -18,8 +18,8 @@
         <div class="col-lg-5 d-flex flex-column gap-4">
           <div class="glass-panel flex-grow-1">
             <h6 class="section-title">VIDEO</h6>
-            <div class="panel-body">
-              No video track. Connect to get started.
+            <div class="panel-body" id="video-container">
+              <!-- LiveKit videos will be appended here -->
             </div>
           </div>
           <div class="glass-panel" style="height: 220px">
@@ -246,7 +246,7 @@ export default {
 
 /* BUTTONS */
 .btn-cyber {
-  background: #00BFFF;
+  background: #00bfff;
   border: none;
   color: white;
   font-weight: 600;
@@ -254,7 +254,7 @@ export default {
   transition: 0.3s;
 }
 .btn-cyber:hover {
-  background: #00BFFF;
+  background: #00bfff;
 }
 
 /* CONTENT */
