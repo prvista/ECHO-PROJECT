@@ -19,3 +19,8 @@ body {
 .video-container video {
   object-fit: cover;
 }
+
+.bg-black {
+  background: radial-gradient(circle at center, #000010 0%, #000 100%);
+}
+
