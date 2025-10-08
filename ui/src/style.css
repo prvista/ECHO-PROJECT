@@ -1,0 +1,21 @@
+body {
+  background: linear-gradient(135deg, #000814, #001d3d);
+  color: white;
+  font-family: 'Orbitron', sans-serif;
+}
+
+.btn {
+  border-radius: 1rem !important;
+}
+
+.btn-outline-info:hover {
+  background-color: rgba(0, 255, 255, 0.2);
+}
+
+.text-info {
+  text-shadow: 0 0 10px cyan;
+}
+
+.video-container video {
+  object-fit: cover;
+}

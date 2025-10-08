@@ -1,39 +1,28 @@
 <template>
-  <div
-    class="d-flex flex-column align-items-center justify-content-center vh-100 bg-dark text-light"
-  >
-    <div
-      class="card bg-secondary bg-opacity-25 text-center p-5 shadow-lg"
-      style="width: 24rem; border-radius: 1rem"
-    >
-      <h1 class="mb-3 text-warning fw-bold">🎧 ECHO</h1>
-      <p class="mb-4">
-        Your AI-powered voice and camera assistant is ready to help you.
-      </p>
-      <button
-        class="btn btn-warning btn-lg fw-semibold shadow-sm"
-        @click="launchAssistant"
-      >
-        Launch Assistant
-      </button>
+  <div class="jarvis-bg d-flex flex-column vh-100 text-light">
+    <div class="container-fluid flex-grow-1 d-flex">
+      <ControlPanel class="col-3 p-3 border-end border-info" />
+      <VideoFeed class="col-9 p-4" />
     </div>
+
+    <footer class="text-center py-2 small bg-dark bg-opacity-50 text-info">
+      Echo AI System © 2025 | Connected to LiveKit Server
+    </footer>
   </div>
 </template>
 
 <script>
+import ControlPanel from "./components/ControlPanel.vue";
+import VideoFeed from "./components/VideoFeed.vue";
+
 export default {
-  name: "App",
-  methods: {
-    launchAssistant() {
-      alert("🚀 Launching your AI assistant...");
-      // later: connect to FastAPI or LiveKit backend here
-    },
-  },
+  components: { ControlPanel, VideoFeed },
 };
 </script>
 
 <style>
-body {
-  background-color: #121212;
+.jarvis-bg {
+  background: radial-gradient(circle at top left, #0b1a24, #020c12);
+  backdrop-filter: blur(10px);
 }
 </style>
