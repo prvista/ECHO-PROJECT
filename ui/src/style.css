@@ -1,26 +1,19 @@
-body {
-  background: linear-gradient(135deg, #000814, #001d3d);
-  color: white;
-  font-family: 'Orbitron', sans-serif;
+@import "tailwindcss/preflight";
+@import "tailwindcss/utilities";
+
+html,
+body,
+#app {
+  height: 100%;
+  background: radial-gradient(circle at top, #141720, #0e0e12);
+  color: #fff;
+  font-family: "Inter", sans-serif;
 }
 
-.btn {
-  border-radius: 1rem !important;
+.glass-panel {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 16px;
+  box-shadow: 0 0 25px rgba(0, 186, 255, 0.15);
 }
-
-.btn-outline-info:hover {
-  background-color: rgba(0, 255, 255, 0.2);
-}
-
-.text-info {
-  text-shadow: 0 0 10px cyan;
-}
-
-.video-container video {
-  object-fit: cover;
-}
-
-.bg-black {
-  background: radial-gradient(circle at center, #000010 0%, #000 100%);
-}
-

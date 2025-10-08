@@ -1,16 +1,13 @@
 <template>
   <div
-    class="h-100 d-flex flex-column justify-content-center align-items-center text-center"
+    class="glass-panel p-4 rounded-xl text-center hover:shadow-glow transition"
   >
-    <h4 class="text-info fw-bold mb-4">Control Panel</h4>
-
-    <button class="btn btn-outline-info mb-3 w-75">🎙️ Mic</button>
-    <button class="btn btn-outline-info mb-3 w-75">📷 Camera</button>
-    <button class="btn btn-outline-danger w-75">🔴 End Session</button>
-
-    <hr class="border-info w-100 my-4" />
-    <p class="text-secondary small">
-      System: <span class="text-success">Online</span>
-    </p>
+    <h3 class="text-lg font-semibold mb-3 text-echoAccent">Control Panel</h3>
+    <p class="text-sm text-gray-300 mb-4">Manage AI & Camera</p>
+    <button
+      class="w-full py-2 bg-echoAccent rounded-md font-medium hover:bg-echoAccent/80 transition"
+    >
+      Start
+    </button>
   </div>
 </template>
