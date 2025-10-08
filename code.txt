@@ -17,3 +17,9 @@ cd C:\Users\vista\Downloads\echo
 & .\venv\Scripts\Activate.ps1
 uvicorn server:app --reload --host 127.0.0.1 --port 8000
 
+
+
+
+cd C:\Users\vista\Downloads\echo\ui
+npm install
+npm run dev

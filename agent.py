@@ -2,29 +2,26 @@
 
 from dotenv import load_dotenv
 import os
+
 from livekit import agents
 from livekit.agents import AgentSession, Agent, RoomInputOptions
-from livekit.agents import plugin  # updated import
+from livekit.plugins import noise_cancellation, google
 from prompts import AGENT_INSTRUCTION, SESSION_INSTRUCTION
 from tools import get_weather, search_web, send_email
 
-# ✅ Load .env from server folder
+# ✅ Explicitly load the .env file from the "server" folder
 env_path = os.path.join(os.path.dirname(__file__), "server", ".env")
 load_dotenv(dotenv_path=env_path)
 
 print("LIVEKIT_URL:", os.getenv("LIVEKIT_URL"))
-
-# Disable noise cancellation (current LiveKit Python may not support it)
-noise_cancellation = None
-google_plugin = plugin.google  # updated to match current package
 
 
 class Assistant(Agent):
     def __init__(self) -> None:
         super().__init__(
             instructions=AGENT_INSTRUCTION,
-            llm=google_plugin.beta.realtime.RealtimeModel(
-                voice="Aoede",
+            llm=google.beta.realtime.RealtimeModel(
+                voice="Aoede",  # AI voice
                 temperature=0.8,
             ),
             tools=[
@@ -48,8 +45,8 @@ async def entrypoint(ctx: agents.JobContext):
         agent=Assistant(),
         room_input_options=RoomInputOptions(
             video_enabled=True,
-            audio_enabled=True,
-            noise_cancellation=noise_cancellation,  # None for now
+            audio_enabled=True,  # enable microphone input
+            noise_cancellation=noise_cancellation.BVC(),
         ),
     )
 
