@@ -18,8 +18,8 @@
         <div class="col-lg-5 d-flex flex-column gap-4">
           <div class="glass-panel flex-grow-1">
             <h6 class="section-title">VIDEO</h6>
-            <div class="panel-body" id="video-container">
-              <!-- LiveKit videos will be appended here -->
+            <div class="panel-body">
+              No video track. Connect to get started.
             </div>
           </div>
           <div class="glass-panel" style="height: 220px">
